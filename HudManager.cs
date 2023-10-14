@@ -70,6 +70,12 @@ namespace CKHud {
 			
 			CreateHudRows(hudRowsAmount);
 
+			LoadLayoutConfig();
+			
+			CKHudMod.Log("Loaded config.");
+		}
+
+		void LoadLayoutConfig() {
 			string componentLayout = "";
 			ConfigSystem.GetString("Components", "Layout", ref componentLayout, "FPS;Position;CenterDistance;DPS");
 			string[] rowStrings = componentLayout.Replace(" ", "").Split(';');
@@ -86,8 +92,6 @@ namespace CKHud {
 					}
 				}
 			}
-			
-			CKHudMod.Log("Loaded config.");
 		}
 
 		Transform FindInGameUI() {
