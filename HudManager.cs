@@ -18,7 +18,7 @@ namespace CKHud {
 		public string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS;LocalComputerTime";
 
 
-        private bool foundText = false;
+		private bool foundText = false;
 
 		void Awake() {
 			if (instance == null) {
