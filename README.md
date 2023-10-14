@@ -12,6 +12,7 @@ If you would like to make a pull request here are some things that you'll want t
  
 # Roadmap/TODO
 - Button to toggle the UI on and off
+- Config for if you want to count mining and explosive damage in DPS
 - An outline and/or background for the text
 - In-game config editing
 - Better system for instantiating the text
