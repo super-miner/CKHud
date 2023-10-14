@@ -11,9 +11,9 @@ If you would like to make a pull request here are some things that you'll want t
     - The `ConfigSystem` class already contains sethods for loading certain data types but if one does is not currently supported feel free to add it
  
 # Roadmap/TODO
-- Config for if you want to count mining and explosive damage in DPS
-- An outline and/or background for the text
 - In-game config editing
 - Better system for instantiating the text
+- Config for if you want to count mining and explosive damage in DPS
+- An outline and/or background for the text
 - Display player stats like attack speed, crit chance, etc.
 - APS (Attacks Per Second) meter
