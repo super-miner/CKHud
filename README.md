@@ -9,3 +9,10 @@ If you would like to make a pull request here are some things that you'll want t
     - To have your component be recognized by the mod you will also need to add it to the `HudComponent`'s `Parse` method
 - To add to the config system you will want to modify the `HudManager`'s LoadConfig function
     - The `ConfigSystem` class already contains sethods for loading certain data types but if one does is not currently supported feel free to add it
+ 
+# Roadmap/TODO
+- Button to toggle the UI on and off
+- An outline and/or background for the text
+- In-game config editing
+- Display player stats like attack speed, crit chance, etc.
+- APS (Attacks Per Second) meter
