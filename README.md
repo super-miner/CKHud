@@ -14,5 +14,6 @@ If you would like to make a pull request here are some things that you'll want t
 - Button to toggle the UI on and off
 - An outline and/or background for the text
 - In-game config editing
+- Better system for instantiating the text
 - Display player stats like attack speed, crit chance, etc.
 - APS (Attacks Per Second) meter
