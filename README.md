@@ -13,6 +13,7 @@ If you would like to make a pull request here are some things that you'll want t
 # Roadmap/TODO
 - In-game config editing
 - Better system for instantiating the text
+- Fix debug system for finding game objects
 - Config for if you want to count mining and explosive damage in DPS
 - An outline and/or background for the text
 - Display player stats like attack speed, crit chance, etc.
