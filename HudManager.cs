@@ -65,7 +65,7 @@ namespace CKHud {
 		
 		void LoadConfig() {
 			int configVersion = -1;
-			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, 0);
+			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, 1);
 			
 			ConfigSystem.GetBool("General", "HudEnabled", ref hudEnabled, hudEnabled);
 			ConfigSystem.GetFloat("General", "HudStart", ref startHudPosition, startHudPosition);
