@@ -15,8 +15,13 @@ namespace CKHud {
             text.transform.localScale = Manager.ui.isAnyInventoryShowing ? Vector3.zero : Manager.ui.CalcGameplayUITargetScaleMultiplier();
 
             if (text.transform.localScale != Vector3.zero) {
-                text.Render(GetString(), false);
-                text.SetTempColor(HudManager.instance.textColor);
+                if (HudManager.instance.hudEnabled) {
+                    text.Render(GetString(), false);
+                    text.SetTempColor(HudManager.instance.textColor);
+                }
+                else {
+                    text.Render("", false);
+                }
             }
         }
 

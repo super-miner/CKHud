@@ -6,6 +6,7 @@ namespace CKHud {
 	public class HudManager : MonoBehaviour {
 		public static HudManager instance = null;
 		
+		public bool hudEnabled = true;
 		public float startHudPosition = 4.25f;
 		public float hudLineStep = -0.75f;
 		public int hudRowsAmount = 12;
@@ -33,6 +34,10 @@ namespace CKHud {
 		}
 		
 		void Update() {
+			if (Input.GetKeyDown(KeyCode.F1)) {
+				SetHudEnabled(!hudEnabled);
+			}
+			
 			if (!foundText) {
 				Transform ingameUI = FindInGameUI();
 					
@@ -62,6 +67,7 @@ namespace CKHud {
 			int configVersion = -1;
 			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, 0);
 			
+			ConfigSystem.GetBool("General", "HudEnabled", ref hudEnabled, hudEnabled);
 			ConfigSystem.GetFloat("General", "HudStart", ref startHudPosition, startHudPosition);
 			ConfigSystem.GetFloat("General", "LineSpacing", ref hudLineStep, hudLineStep);
 			ConfigSystem.GetInt("General", "NumRows", ref hudRowsAmount, hudRowsAmount);
@@ -147,6 +153,11 @@ namespace CKHud {
 			}
 
 			return healthTextNumber.gameObject;
+		}
+
+		void SetHudEnabled(bool value) {
+			hudEnabled = value;
+			ConfigSystem.SetBool("General", "HudEnabled", value);
 		}
 
 		void CreateHudRows(int amount) {

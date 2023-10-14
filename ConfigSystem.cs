@@ -101,5 +101,9 @@ namespace CKHud {
                 return false;
             }
         }
+        
+        public static void SetBool(string section, string key, bool value) {
+            API.Config.Set(CKHudMod.MOD_ID, section, key, value);
+        }
     }
 }
