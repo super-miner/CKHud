@@ -13,7 +13,7 @@ namespace CKHud.HudComponents {
                 case "DPS":
                     return new DPSHudComponent();
                 case "LocalComputerTime":
-                    return new LocalComputerTimeComponent();
+                    return new LocalComputerTimeHudComponent();
                 default:
                     return null;
             }

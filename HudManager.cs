@@ -6,6 +6,8 @@ namespace CKHud {
 	public class HudManager : MonoBehaviour {
 		public static HudManager instance = null;
 		
+		public const string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS;LocalComputerTime";
+		
 		public bool hudEnabled = true;
 		public float startHudPosition = 4.25f;
 		public float hudLineStep = -0.75f;
@@ -14,9 +16,6 @@ namespace CKHud {
 		public bool compactMode = false;
 		
 		public List<HudRow> hudRows = new List<HudRow>();
-
-		public string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS;LocalComputerTime";
-
 
 		private bool foundText = false;
 
