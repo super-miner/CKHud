@@ -12,6 +12,8 @@ namespace CKHud.HudComponents {
                     return new CenterDistanceHudComponent();
                 case "DPS":
                     return new DPSHudComponent();
+                case "LocalComputerTime":
+                    return new LocalComputerTimeComponent();
                 default:
                     return null;
             }

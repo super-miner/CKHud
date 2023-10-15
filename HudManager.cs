@@ -14,7 +14,10 @@ namespace CKHud {
 		public bool compactMode = false;
 		
 		public List<HudRow> hudRows = new List<HudRow>();
-		
+
+		public string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS;LocalComputerTime";
+
+
 		private bool foundText = false;
 
 		void Awake() {
@@ -83,7 +86,7 @@ namespace CKHud {
 
 		void LoadLayoutConfig() {
 			string componentLayout = "";
-			ConfigSystem.GetString("Components", "Layout", ref componentLayout, "FPS;Position;CenterDistance;DPS");
+			ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);
 			string[] rowStrings = componentLayout.Replace(" ", "").Split(';');
 			int rowsUsed = (int)Mathf.Min(rowStrings.Length, hudRows.Count);
 			
