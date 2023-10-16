@@ -7,6 +7,7 @@ namespace CKHud {
 		public static HudManager instance = null;
 		
 		public const string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS;LocalComputerTime";
+		public const int CONFIG_VERSION = 2;
 		
 		public bool hudEnabled = true;
 		public float startHudPosition = 4.25f;
@@ -103,10 +104,10 @@ namespace CKHud {
 
 		void UpdateConfig() {
 			int configVersion = -1;
-			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, 2);
+			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, CONFIG_VERSION);
 			
 			if (configVersion < 2) {
-				ConfigSystem.SetInt("ConfigVersion", "DoNotEdit", 2);
+				ConfigSystem.SetInt("ConfigVersion", "DoNotEdit", CONFIG_VERSION);
 				
 				string componentLayout = "";
 				ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);

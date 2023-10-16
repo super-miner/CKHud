@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CKHud {
 	public class CKHudMod : IMod {
-		public static string MOD_VERSION = "1.1.2";
+		public static string MOD_VERSION = "1.1.3";
 		public static string MOD_NAME = "CK Hud";
 		public static string MOD_ID = "CKHUD";
 		
