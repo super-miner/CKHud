@@ -102,7 +102,15 @@ namespace CKHud {
             }
         }
         
+        public static void SetString(string section, string key, string value) {
+            API.Config.Set(CKHudMod.MOD_ID, section, key, value);
+        }
+        
         public static void SetBool(string section, string key, bool value) {
+            API.Config.Set(CKHudMod.MOD_ID, section, key, value);
+        }
+        
+        public static void SetInt(string section, string key, int value) {
             API.Config.Set(CKHudMod.MOD_ID, section, key, value);
         }
     }

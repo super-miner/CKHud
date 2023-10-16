@@ -66,8 +66,7 @@ namespace CKHud {
 		}
 		
 		void LoadConfig() {
-			int configVersion = -1;
-			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, 1);
+			UpdateConfig();
 			
 			ConfigSystem.GetBool("General", "HudEnabled", ref hudEnabled, hudEnabled);
 			ConfigSystem.GetFloat("General", "HudStart", ref startHudPosition, startHudPosition);
@@ -99,6 +98,19 @@ namespace CKHud {
 						hudRows[i].components.Add(component);
 					}
 				}
+			}
+		}
+
+		void UpdateConfig() {
+			int configVersion = -1;
+			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, 2);
+			
+			if (configVersion < 2) {
+				ConfigSystem.SetInt("ConfigVersion", "DoNotEdit", 2);
+				
+				string componentLayout = "";
+				ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);
+				ConfigSystem.SetString("Components", "Layout", componentLayout + ";LocalComputerTime");
 			}
 		}
 
