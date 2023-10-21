@@ -1,11 +1,15 @@
+using System.Linq;
 using PugMod;
 using UnityEngine;
 
 namespace CKHud {
 	public class CKHudMod : IMod {
-		public static string MOD_VERSION = "1.1.3";
+		public static string MOD_VERSION = "1.1.4";
 		public static string MOD_NAME = "CK Hud";
 		public static string MOD_ID = "CKHUD";
+		
+		public static LoadedMod modInfo = null;
+		public static AssetBundle assetBundle;
 		
 		private GameObject hudManager = null;
 		
@@ -14,7 +18,15 @@ namespace CKHud {
 		}
 		
 		public void EarlyInit() {
+			modInfo = GetModInfo();
 
+			if (modInfo != null) {
+				assetBundle = modInfo.AssetBundles[0];
+				CKHudMod.Log("Found mod info.");
+			}
+			else {
+				CKHudMod.Log("Could not find mod info.");
+			}
 		}
 
 		public void Init() {
@@ -33,6 +45,10 @@ namespace CKHud {
 
 		public void Update() {
 			
+		}
+		
+		private LoadedMod GetModInfo() { // Code taken from Better Chat
+			return API.ModLoader.LoadedMods.FirstOrDefault(modInfo => modInfo.Handlers.Contains(this));
 		}
 	}	
 }

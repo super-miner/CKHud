@@ -9,6 +9,11 @@ namespace CKHud {
 		public const string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS;LocalComputerTime";
 		public const int CONFIG_VERSION = 2;
 		
+		private const string TEXT_PREFAB_PATH = "Assets/CKHud/CKHud_Text.prefab";
+		private GameObject textPrefab = null;
+
+		public MapUI mapUI = null;
+		
 		public bool hudEnabled = true;
 		public float startHudPosition = 4.25f;
 		public float hudLineStep = -0.75f;
@@ -31,33 +36,27 @@ namespace CKHud {
 			
 			DontDestroyOnLoad(transform.gameObject);
 			
+			textPrefab = CKHudMod.assetBundle.LoadAsset<GameObject>(TEXT_PREFAB_PATH);
+			
 			LoadConfig();
 			
 			CKHudMod.Log("Successfully initialized the Hud Manager object.");
 		}
 		
 		void Update() {
-			if (Input.GetKeyDown(KeyCode.F1)) {
+			if (Input.GetKeyDown(KeyCode.F1) && !Manager.menu.IsAnyMenuActive()) {
 				SetHudEnabled(!hudEnabled);
 			}
 			
 			if (!foundText) {
 				Transform ingameUI = FindInGameUI();
-					
-				if (!ingameUI) {
-					CKHudMod.Log("Could not find Ingame UI.");
-					return;
-				}
+				Transform mapUITransform = FindMapUI(ingameUI);
+
+				mapUI = mapUITransform.GetComponent<MapUI>();
 				
-				GameObject textPrefab = FindTextPrefab(ingameUI);
+				InitHudRowsText(ingameUI);
 				
-				if (!textPrefab) {
-					return;
-				}
-				
-				CKHudMod.Log("Found the text to use as a template.");
-				
-				InitHudRowsText(textPrefab, ingameUI);
+				CKHudMod.Log("Created text objects.");
 				
 				foundText = true;
 			}
@@ -123,51 +122,13 @@ namespace CKHud {
 
 			Transform renderingParent = Manager.ui.transform.parent.parent.GetChild(2); // GlobalObjects (Main Manager)(Clone)/Rendering
 
-			if (!renderingParent) {
-				CKHudMod.Log("Could not find Rendering object.");
-				return null;
-			}
-
 			Transform uiCamera = renderingParent.transform.GetChild(1);
-
-			if (!uiCamera) {
-				CKHudMod.Log("Could not find UI Camera.");
-				return null;
-			}
 
 			return uiCamera.GetChild(0);
 		}
-
-		GameObject FindTextPrefab(Transform ingameUI) { // TODO: Figure out how to create a prefab for this instead of using existing text.
-			Transform playerHealthBar = ingameUI.GetChild(0);
-
-			if (!playerHealthBar) {
-				CKHudMod.Log("Could not find Player Health Bar.");
-				return null;
-			}
-
-			Transform playerHealthContainer = playerHealthBar.GetChild(0);
-
-			if (!playerHealthContainer) {
-				CKHudMod.Log("Could not find player health Container.");
-				return null;
-			}
-
-			Transform playerHealthTextContainer = playerHealthContainer.GetChild(6);
-
-			if (!playerHealthTextContainer) {
-				CKHudMod.Log("Could not find player health Text Container.");
-				return null;
-			}
-
-			Transform healthTextNumber = playerHealthTextContainer.GetChild(1);
-
-			if (!healthTextNumber) {
-				CKHudMod.Log("Could not find player Health Text Number.");
-				return null;
-			}
-
-			return healthTextNumber.gameObject;
+		
+		Transform FindMapUI(Transform ingameUI) {
+			return ingameUI.GetChild(13);
 		}
 
 		void SetHudEnabled(bool value) {
@@ -182,19 +143,17 @@ namespace CKHud {
 			}
 		}
 		
-		void InitHudRowsText(GameObject textPrefab, Transform container) {
+		void InitHudRowsText(Transform container) {
 			float textYPosition = startHudPosition;
-			int textNum = 1;
+			
 			foreach (HudRow hudRow in hudRows) {
-				GameObject textGO = Instantiate<GameObject>(textPrefab, container);
-				textGO.name = "CKHud_Text_Row" + textNum;
+				GameObject textGO = UnityEngine.Object.Instantiate(textPrefab, container, true);
 				textGO.transform.position = new Vector3(14.5f, textYPosition, 0.0f);
 
 				PugText text = textGO.GetComponent<PugText>();
 
 				hudRow.text = text;
-
-				textNum++;
+				
 				textYPosition += hudLineStep;
 			}
 		}

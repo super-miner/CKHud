@@ -12,7 +12,7 @@ namespace CKHud {
                 return;
             }
             
-            text.transform.localScale = Manager.ui.isAnyInventoryShowing ? Vector3.zero : Manager.ui.CalcGameplayUITargetScaleMultiplier();
+            text.transform.localScale = Manager.ui.isAnyInventoryShowing || HudManager.instance.mapUI.isShowingBigMap ? Vector3.zero : Manager.ui.CalcGameplayUITargetScaleMultiplier();
 
             if (text.transform.localScale != Vector3.zero) {
                 if (HudManager.instance.hudEnabled) {
