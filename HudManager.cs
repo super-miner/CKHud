@@ -7,7 +7,7 @@ namespace CKHud {
 		public static HudManager instance = null;
 		
 		public const string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS;LocalComputerTime";
-		public const int CONFIG_VERSION = 2;
+		public const int CONFIG_VERSION = 3;
 		
 		private const string TEXT_PREFAB_PATH = "Assets/CKHud/CKHud_Text.prefab";
 		private GameObject textPrefab = null;
@@ -111,6 +111,14 @@ namespace CKHud {
 				string componentLayout = "";
 				ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);
 				ConfigSystem.SetString("Components", "Layout", componentLayout + ";LocalComputerTime");
+			}
+			
+			if (configVersion < 3) {
+				ConfigSystem.SetInt("ConfigVersion", "DoNotEdit", CONFIG_VERSION);
+				
+				string componentLayout = "";
+				ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);
+				ConfigSystem.SetString("Components", "Layout", componentLayout.Replace("DPS", "DPS,MaxDPS"));
 			}
 		}
 

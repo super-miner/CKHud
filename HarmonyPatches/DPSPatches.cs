@@ -17,22 +17,20 @@ namespace CKHud.HarmonyPatches {
             damageInstances.Add((Time.time, damageAfterReduction));
         }
 
-        public static int GetDPS(float timeFrame, float smoothingCoefficient) {
+        public static int GetDPS(float timeFrame, float smoothingCoefficient, float maxDPSHoldTime) {
             while (damageInstances.Count > 0 && damageInstances[0].time < Time.time - timeFrame) {
                 damageInstances.RemoveAt(0);
             }
 
-            if (lastMaxDPSTime >= 0.0f && Time.time - lastMaxDPSTime > smoothingCoefficient) {
+            if (lastMaxDPSTime >= 0.0f && Time.time - lastMaxDPSTime > Mathf.Max(smoothingCoefficient, maxDPSHoldTime)) {
                 lastMaxDPSTime = -1.0f;
                 maxDPS = 0;
             }
 
             int sum = 0;
-
             foreach ((float time, int damage) damageInstance in damageInstances) {
                 sum += damageInstance.damage;
             }
-
             int effectiveDPS = Mathf.FloorToInt(sum / timeFrame);
             
             if (effectiveDPS > 0) {
@@ -41,8 +39,6 @@ namespace CKHud.HarmonyPatches {
             maxDPS = Mathf.FloorToInt(Mathf.Max(maxDPS, effectiveDPS));
             
             int smoothingStep = Mathf.FloorToInt(maxDPS * smoothingCoefficient * Time.deltaTime);
-            
-
             smoothedDPS = Mathf.FloorToInt(Mathf.MoveTowards(smoothedDPS, effectiveDPS, smoothingStep));
             
             return smoothedDPS;

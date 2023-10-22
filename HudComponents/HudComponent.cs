@@ -14,6 +14,8 @@ namespace CKHud.HudComponents {
                     return new DPSHudComponent();
                 case "LocalComputerTime":
                     return new LocalComputerTimeHudComponent();
+                case "MaxDPS":
+                    return new MaxDPSHudComponent();
                 default:
                     return null;
             }
