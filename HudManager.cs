@@ -6,7 +6,7 @@ namespace CKHud {
 	public class HudManager : MonoBehaviour {
 		public static HudManager instance = null;
 		
-		public const string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS;LocalComputerTime";
+		public const string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS,MaxDPS;LocalComputerTime";
 		public const int CONFIG_VERSION = 3;
 		
 		private const string TEXT_PREFAB_PATH = "Assets/CKHud/CKHud_Text.prefab";
@@ -37,6 +37,10 @@ namespace CKHud {
 			DontDestroyOnLoad(transform.gameObject);
 			
 			textPrefab = CKHudMod.assetBundle.LoadAsset<GameObject>(TEXT_PREFAB_PATH);
+
+			if (textPrefab == null) {
+				CKHudMod.Log("Error loading the text prefab (null)");
+			}
 			
 			LoadConfig();
 			
@@ -87,6 +91,7 @@ namespace CKHud {
 			ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);
 			string[] rowStrings = componentLayout.Replace(" ", "").Split(';');
 			int rowsUsed = (int)Mathf.Min(rowStrings.Length, hudRows.Count);
+			bool addedComponents = false;
 			
 			for (int i = 0; i < rowsUsed; i++) {
 				string[] componentStrings = rowStrings[i].Split(',');
@@ -96,13 +101,21 @@ namespace CKHud {
 
 					if (component != null) {
 						hudRows[i].components.Add(component);
+						addedComponents = true;
 					}
 				}
+			}
+
+			if (!addedComponents) {
+				CKHudMod.Log("No components were found to add.");
+			}
+			else {
+				CKHudMod.Log("Components added.");
 			}
 		}
 
 		void UpdateConfig() {
-			int configVersion = -1;
+			int configVersion = 999999;
 			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, CONFIG_VERSION);
 			
 			if (configVersion < 2) {

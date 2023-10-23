@@ -8,7 +8,12 @@ namespace CKHud {
         public List<HudComponent> components = new List<HudComponent>();
         
         public void Render() {
-            if (components.Count == 0 || !text) {
+            if (text == null) {
+                CKHudMod.Log("Could not find text.");
+                return;
+            }
+            
+            if (components.Count == 0) {
                 return;
             }
             
@@ -16,7 +21,13 @@ namespace CKHud {
 
             if (text.transform.localScale != Vector3.zero) {
                 if (HudManager.instance.hudEnabled) {
-                    text.Render(GetString(), false);
+                    string displayString = GetString();
+
+                    if (displayString == "") {
+                        CKHudMod.Log("The displayed string was empty.");
+                    }
+                    
+                    text.Render(displayString, false);
                     text.SetTempColor(HudManager.instance.textColor);
                 }
                 else {
