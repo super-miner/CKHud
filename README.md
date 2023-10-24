@@ -19,6 +19,7 @@ If you would like to make a pull request here are some things that you'll want t
     - Rework HudComponent class to cache values when possible
     - Change the way that the hud is disabled to be based on `GameObject.SetActive(false)` instead of `PugText.Render("")`
     - Move config logic from HudManager to its own class
+    - Make component loading more lenient to `... ;; ...`s (blank lines)
 - Add spawning cell position hud component
 - Add second hud location
 - Split hud between togglable and non-toggable hud
