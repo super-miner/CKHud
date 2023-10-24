@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using CKHud.HudComponents;
+using Assets.CKHud.HudComponents;
 
 namespace CKHud {
 	public class HudManager : MonoBehaviour {
@@ -97,7 +98,7 @@ namespace CKHud {
 				string[] componentStrings = rowStrings[i].Split(',');
 				
 				foreach (string componentString in componentStrings) {
-					HudComponent component = HudComponent.Parse(componentString);
+					HudComponent component = HudComponentsRegistry.GetHudComponentByType(componentString);
 
 					if (component != null) {
 						hudRows[i].components.Add(component);

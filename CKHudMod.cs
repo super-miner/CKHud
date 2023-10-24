@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Runtime.CompilerServices;
 using PugMod;
 using UnityEngine;
 
@@ -16,8 +17,12 @@ namespace CKHud {
 		public static void Log(object message) {
 			Debug.Log(MOD_NAME + ": " + message.ToString());
 		}
-		
-		public void EarlyInit() {
+
+        public static void LogMethod(object message, [CallerMemberName] string callerMethod = "") {
+            Debug.Log($"{MOD_NAME} [${callerMethod}]: {message}");
+        }
+
+        public void EarlyInit() {
 			modInfo = GetModInfo();
 
 			if (modInfo != null) {
