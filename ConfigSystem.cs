@@ -6,6 +6,7 @@ namespace CKHud {
         public static bool GetString(string section, string key, ref string value, string defaultValue) {
             if (API.Config.TryGet(CKHudMod.MOD_ID, section, key, out string output)) {
                 value = output;
+                CKHudMod.Log("Loaded " + section + "-" + key + " with a value of " + value);
                 return true;
             }
             else {
@@ -19,6 +20,7 @@ namespace CKHud {
             if (API.Config.TryGet(CKHudMod.MOD_ID, section, key, out string valueString)) {
                 if (float.TryParse(valueString, out float output)) {
                     value = output;
+                    CKHudMod.Log("Loaded " + section + "-" + key + " with a value of " + value);
                     return true;
                 }
                 else {
@@ -37,6 +39,7 @@ namespace CKHud {
             if (API.Config.TryGet(CKHudMod.MOD_ID, section, key, out string valueString)) {
                 if (int.TryParse(valueString, out int output)) {
                     value = output;
+                    CKHudMod.Log("Loaded " + section + "-" + key + " with a value of " + value);
                     return true;
                 }
                 else {
@@ -55,6 +58,7 @@ namespace CKHud {
             if (API.Config.TryGet(CKHudMod.MOD_ID, section, key, out string valueString)) {
                 if (bool.TryParse(valueString, out bool output)) {
                     value = output;
+                    CKHudMod.Log("Loaded " + section + "-" + key + " with a value of " + value);
                     return true;
                 }
                 else {
@@ -74,6 +78,7 @@ namespace CKHud {
             bool foundString = GetString(section, key, ref colorString, defaultValue.r + " " + defaultValue.g + " " + defaultValue.b + " " + defaultValue.a);
 
             if (foundString) {
+                CKHudMod.Log("Loaded " + section + "-" + key + " with a value of " + colorString);
                 string[] rgbaStrings = colorString.Trim().Split(' ');
 
                 if (rgbaStrings.Length == 4) {
