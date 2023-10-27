@@ -58,8 +58,11 @@ namespace CKHud {
 				Transform mapUITransform = FindMapUI(ingameUI);
 
 				mapUI = mapUITransform.GetComponent<MapUI>();
-				
-				InitHudRowsText(ingameUI);
+
+				GameObject ckHudHolder = new GameObject("CKHudUI");
+				ckHudHolder.transform.parent = ingameUI;
+
+				InitHudRowsText(ckHudHolder.transform);
 				
 				CKHudMod.Log("Created text objects.");
 				
@@ -159,8 +162,7 @@ namespace CKHud {
 		}
 
 		void CreateHudRows(int amount) {
-			float textYPosition = startHudPosition;
-			for (int i = 0; i < amount; i++, textYPosition += hudLineStep) {
+			for (int i = 0; i < amount; i++) {
 				hudRows.Add(new HudRow());
 			}
 		}

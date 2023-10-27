@@ -18,7 +18,8 @@ namespace CKHud.HudComponents {
 
 			// Spawn [Cell X | Cell Y] <PosX in C | PosY in C>s
 
-			return $"Cell [{spawnCellX:00##}; {spawnCellY:00##}]  <{posInCellX:00##} | {posInCellY:00##}>";
+			return $"Cell {spawnCellX:00}/{spawnCellY:00}  Pos {posInCellX:00}/{posInCellY:00}";
 		}
     }
 }
+ 
