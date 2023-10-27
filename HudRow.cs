@@ -6,6 +6,10 @@ namespace CKHud {
     public class HudRow {
         public PugText text = null;
         public List<HudComponent> components = new List<HudComponent>();
+
+        public void Update() {
+            Render();
+        }
         
         public void Render() {
             if (text == null) {

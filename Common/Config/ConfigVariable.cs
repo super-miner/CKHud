@@ -1,6 +1,6 @@
 using PugMod;
 
-namespace CKHud.Common {
+namespace CKHud.Common.Config {
     /// <summary>
     /// Manages a single config variable.
     /// </summary>
@@ -35,6 +35,15 @@ namespace CKHud.Common {
             else {
                 LogSystem.instance.Log("Could not find value for " + section + "-" + key + ", initialized with " + this.defaultValue + ".");
             }
+        }
+
+        /// <summary>
+        /// Gets the value associated with this config variable.
+        /// </summary>
+        /// <param name="forceFetch">Forces the function to re-read to config file instead of using cached values.</param>
+        /// <returns>The value found or the default value if none found.</returns>
+        public object GetValue(bool forceFetch = false) {
+            return GetValue(out bool success, forceFetch);
         }
 
         /// <summary>
