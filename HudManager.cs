@@ -46,10 +46,10 @@ namespace CKHud {
 			LoadConfig();
 			
 			CKHudMod.Log("Successfully initialized the Hud Manager object.");
-		}
+		} 
 		
 		void Update() {
-			if (Input.GetKeyDown(KeyCode.F1) && !Manager.menu.IsAnyMenuActive()) {
+			if ((CKHudMod.rewiredPlayer?.GetButtonDown(CKHudMod.KEYBIND_TOGGLE_HUD) ?? false) && !Manager.menu.IsAnyMenuActive()) {
 				SetHudEnabled(!hudEnabled);
 			}
 			
