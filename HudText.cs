@@ -20,10 +20,12 @@ namespace CKHud {
 			transform.localScale = Manager.ui.isAnyInventoryShowing || HudManager.instance.mapUI.isShowingBigMap || !ConfigManager.instance.hudEnabled.GetValue() ? Vector3.zero : Manager.ui.CalcGameplayUITargetScaleMultiplier();
 
 			if (text.transform.localScale != Vector3.zero) {
-				string displayString = hudRow.GetString();
-                
-				text.Render(displayString, false);
-				text.SetTempColor(ConfigManager.instance.textColor.GetValue());
+				bool shouldRerender = hudRow.GetString(out string newText);
+
+				if (shouldRerender) {
+					text.Render(newText, false);
+					text.SetTempColor(ConfigManager.instance.textColor.GetValue());
+				}
 			}
 		}
 	}

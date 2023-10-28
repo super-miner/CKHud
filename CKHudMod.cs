@@ -39,13 +39,13 @@ namespace CKHud {
 		}
 
 		public void Init() {
-			hudManager = new GameObject("CKHud_HudManager", typeof(HudManager));
+			new GameObject("CKHud_HudManager", typeof(HudManager));
 			
-			CKHudMod.Log("Loaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
+			LogSystem.Log("Loaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
 		}
 
 		public void Shutdown() {
-			CKHudMod.Log("Unloaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
+			LogSystem.Log("Unloaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
 		}
 
 		public void ModObjectLoaded(UnityEngine.Object obj) {

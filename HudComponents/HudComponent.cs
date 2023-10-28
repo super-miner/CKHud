@@ -5,14 +5,14 @@ namespace CKHud.HudComponents {
 	    public string cachedString = "";
 	    public float lastUpdateTime = float.MinValue;
 	    
-        public bool GetString(out string newText) {
+        public bool GetString(out string output) {
 	        if (ShouldRegenerateString()) {
 		        cachedString = CreateString();
-		        newText = cachedString;
+		        output = cachedString;
 		        return true;
 	        }
 
-	        newText = cachedString;
+	        output = cachedString;
 	        return false;
         }
 
