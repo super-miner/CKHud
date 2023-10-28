@@ -1,6 +1,9 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
+using CoreLib;
+using CoreLib.RewiredExtension;
 using PugMod;
+using Rewired;
 using UnityEngine;
 
 namespace CKHud {
@@ -8,9 +11,12 @@ namespace CKHud {
 		public static string MOD_VERSION = "1.1.4";
 		public static string MOD_NAME = "CK Hud";
 		public static string MOD_ID = "CKHUD";
+
+		public static string KEYBIND_TOGGLE_HUD = MOD_ID + "_TOGGLE_HUD";
 		
 		public static LoadedMod modInfo = null;
 		public static AssetBundle assetBundle;
+		public static Player rewiredPlayer;
 		
 		private GameObject hudManager = null;
 		
@@ -32,6 +38,14 @@ namespace CKHud {
 			else {
 				CKHudMod.Log("Could not find mod info.");
 			}
+
+
+			CoreLibMod.LoadModules(typeof(RewiredExtensionModule));
+
+			RewiredExtensionModule.rewiredStart += () => { 
+				rewiredPlayer = ReInput.players.GetPlayer(0);
+			};
+			RewiredExtensionModule.AddKeybind(KEYBIND_TOGGLE_HUD, $"{MOD_NAME}: Toggle HUD", KeyboardKeyCode.F1);
 		}
 
 		public void Init() {
