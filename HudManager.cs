@@ -1,16 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
 using CKHud.HudComponents;
+using Assets.CKHud.HudComponents;
 
 namespace CKHud {
 	public class HudManager : MonoBehaviour {
 		public static HudManager instance = null;
-		
+
 		private const string TEXT_PREFAB_PATH = "Assets/CKHud/Prefabs/CKHud_Text.prefab";
 		private GameObject textPrefab = null;
 
 		public MapUI mapUI = null;
-		
+
 		public List<HudRow> hudRows = new List<HudRow>();
 
 		private bool foundText = false;
@@ -23,35 +24,38 @@ namespace CKHud {
 				Destroy(transform.gameObject);
 				return;
 			}
-			
+
 			DontDestroyOnLoad(transform.gameObject);
-			
+
 			textPrefab = CKHudMod.assetBundle.LoadAsset<GameObject>(TEXT_PREFAB_PATH);
 
 			if (textPrefab == null) {
 				CKHudMod.Log("Error loading the text prefab (null)");
 			}
-			
+
 			LoadConfig();
-			
+
 			CKHudMod.Log("Successfully initialized the Hud Manager object.");
 		}
-		
+
 		void Update() {
-			if (Input.GetKeyDown(KeyCode.F1) && !Manager.menu.IsAnyMenuActive()) {
+			if ((CKHudMod.rewiredPlayer?.GetButtonDown(CKHudMod.KEYBIND_TOGGLE_HUD) ?? false) && !Manager.menu.IsAnyMenuActive()) {
 				SetHudEnabled(!hudEnabled);
 			}
-			
+
 			if (!foundText) {
 				Transform ingameUI = FindInGameUI();
 				Transform mapUITransform = FindMapUI(ingameUI);
 
 				mapUI = mapUITransform.GetComponent<MapUI>();
-				
-				InitHudRowsText(ingameUI);
-				
+
+				GameObject ckHudHolder = new GameObject("CKHudUI");
+				ckHudHolder.transform.parent = ingameUI;
+
+				InitHudRowsText(ckHudHolder.transform);
+
 				CKHudMod.Log("Created text objects.");
-				
+
 				foundText = true;
 			}
 		}
@@ -68,7 +72,7 @@ namespace CKHud {
 
 			return uiCamera.GetChild(0);
 		}
-		
+
 		Transform FindMapUI(Transform ingameUI) {
 			return ingameUI.GetChild(13);
 		}
@@ -79,15 +83,14 @@ namespace CKHud {
 		}
 
 		void CreateHudRows(int amount) {
-			float textYPosition = startHudPosition;
-			for (int i = 0; i < amount; i++, textYPosition += hudLineStep) {
+			for (int i = 0; i < amount; i++) {
 				hudRows.Add(new HudRow());
 			}
 		}
-		
+
 		void InitHudRowsText(Transform container) {
 			float textYPosition = startHudPosition;
-			
+
 			foreach (HudRow hudRow in hudRows) {
 				GameObject textGO = UnityEngine.Object.Instantiate(textPrefab, container, true);
 				textGO.transform.position = new Vector3(14.5f, textYPosition, 0.0f);
@@ -95,7 +98,7 @@ namespace CKHud {
 				PugText text = textGO.GetComponent<PugText>();
 
 				hudRow.text = text;
-				
+
 				textYPosition += hudLineStep;
 			}
 		}
