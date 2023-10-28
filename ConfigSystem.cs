@@ -16,15 +16,18 @@ namespace CKHud {
         }
         
         public static bool GetFloat(string section, string key, ref float value, float defaultValue) {
-            if (API.Config.TryGet(CKHudMod.MOD_ID, section, key, out string valueString)) {
-                if (float.TryParse(valueString, out float output)) {
+            if (API.Config.TryGet<float>(CKHudMod.MOD_ID, section, key, out float configuredFloatValue)) {
+				value = configuredFloatValue;
+
+				return true;
+               /* if (float.TryParse(valueString, Local, out float output)) {
                     value = output;
                     return true;
                 }
                 else {
                     CKHudMod.Log("The config value entered for \"" + section + "/" + key + "\" is not the right type (it should be a number).");
                     return false;
-                }
+                }*/
             }
             else {
                 API.Config.Set(CKHudMod.MOD_ID, section, key, defaultValue);
