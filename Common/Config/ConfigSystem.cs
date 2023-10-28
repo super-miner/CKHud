@@ -6,34 +6,26 @@ namespace CKHud.Common.Config {
     /// <summary>
     /// A system for managing config files.
     /// </summary>
-    public class ConfigSystem {
-        public static ConfigSystem instance = null;
-
-        public readonly string modId = "";
-        public readonly List<ConfigVariable> configVariables = new List<ConfigVariable>();
+    public static class ConfigSystem {
+        public static string modId = "";
+        public static readonly List<ConfigVariable> configVariables = new List<ConfigVariable>();
 
         /// <summary>
-        /// The constructor for the ConfigSystem class. Use ConfigSystem.Create instead.
+        /// The initialization function for the ConfigSystem class.
         /// </summary>
-        /// <param name="modId">The id of your mod.</param>
-        public ConfigSystem(string modId) {
-            this.modId = modId;
-        }
-        
-        /// <summary>
-        /// Creates the ConfigSystem singleton if none exist.
-        /// </summary>
-        /// <param name="modId">The id of your mod.</param>
-        public static void Create(string modId) {
-            instance = instance ?? new ConfigSystem(modId);
+        /// <param name="_modId">The id of your mod.</param>
+        public static void Init(string _modId) {
+            modId = _modId;
         }
 
         /// <summary>
         /// Creates a config variable.
         /// </summary>
         /// <param name="variable">The config variable to add.</param>
-        public void AddVariable(ConfigVariable variable) {
+        public static ConfigVariable AddVariable(ConfigVariable variable) {
             configVariables.Add(variable);
+
+            return variable;
         }
         
         /// <summary>
@@ -42,7 +34,12 @@ namespace CKHud.Common.Config {
         /// <param name="section">The section of the config variable.</param>
         /// <param name="key">The key of the config variable.</param>
         /// <param name="defaultValue">The default value for the variable.</param>
-        public ConfigFloat AddFloat(string section, string key, float defaultValue) {
+        public static ConfigFloat AddFloat(string section, string key, float defaultValue) {
+	        if (modId == null) {
+		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        return null;
+	        }
+	        
             ConfigFloat variable = new ConfigFloat(modId, section, key, defaultValue);
             
             configVariables.Add(variable);
@@ -55,7 +52,12 @@ namespace CKHud.Common.Config {
         /// <param name="section">The section of the config variable.</param>
         /// <param name="key">The key of the config variable.</param>
         /// <param name="defaultValue">The default value for the variable.</param>
-        public ConfigInt AddInt(string section, string key, int defaultValue) {
+        public static ConfigInt AddInt(string section, string key, int defaultValue) {
+	        if (modId == null) {
+		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        return null;
+	        }
+	        
             ConfigInt variable = new ConfigInt(modId, section, key, defaultValue);
             
             configVariables.Add(variable);
@@ -68,7 +70,12 @@ namespace CKHud.Common.Config {
         /// <param name="section">The section of the config variable.</param>
         /// <param name="key">The key of the config variable.</param>
         /// <param name="defaultValue">The default value for the variable.</param>
-        public ConfigBool AddBool(string section, string key, bool defaultValue) {
+        public static ConfigBool AddBool(string section, string key, bool defaultValue) {
+	        if (modId == null) {
+		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        return null;
+	        }
+	        
             ConfigBool variable = new ConfigBool(modId, section, key, defaultValue);
             
             configVariables.Add(variable);
@@ -81,7 +88,12 @@ namespace CKHud.Common.Config {
         /// <param name="section">The section of the config variable.</param>
         /// <param name="key">The key of the config variable.</param>
         /// <param name="defaultValue">The default value for the variable.</param>
-        public ConfigString AddString(string section, string key, string defaultValue) {
+        public static ConfigString AddString(string section, string key, string defaultValue) {
+	        if (modId == null) {
+		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        return null;
+	        }
+	        
             ConfigString variable = new ConfigString(modId, section, key, defaultValue);
             
             configVariables.Add(variable);
@@ -94,7 +106,12 @@ namespace CKHud.Common.Config {
         /// <param name="section">The section of the config variable.</param>
         /// <param name="key">The key of the config variable.</param>
         /// <param name="defaultValue">The default value for the variable.</param>
-        public ConfigColor AddColor(string section, string key, Color defaultValue) {
+        public static ConfigColor AddColor(string section, string key, Color defaultValue) {
+	        if (modId == null) {
+		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        return null;
+	        }
+	        
             ConfigColor variable = new ConfigColor(modId, section, key, defaultValue);
             
             configVariables.Add(variable);
@@ -107,7 +124,7 @@ namespace CKHud.Common.Config {
         /// <param name="section">The section of the config variable.</param>
         /// <param name="key">The key of the config variable.</param>
         /// <returns>The config variable.</returns>
-        public ConfigVariable GetVariable(string section, string key) {
+        public static ConfigVariable GetVariable(string section, string key) {
             return configVariables.FirstOrDefault(configVariable => configVariable.section == section && configVariable.key == key);
         }
     }

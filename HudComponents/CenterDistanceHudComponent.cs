@@ -1,10 +1,11 @@
+using CKHud.Config;
 using UnityEngine;
 
 namespace CKHud.HudComponents {
     public class CenterDistanceHudComponent : HudComponent {
-        public override string GetString() {
+        public override string CreateString() {
             Vector3 playerPosition = Manager.main.player.WorldPosition;
-            if (HudManager.instance.compactMode) {
+            if (ConfigManager.instance.compactMode.GetValue()) {
                 return "C Dist: " + Vector3.Distance(Vector3.zero, playerPosition).ToString("N0");
             }
             else {

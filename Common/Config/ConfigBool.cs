@@ -38,11 +38,11 @@ namespace CKHud.Common.Config {
                     return valueBool;
                 }
                 else {
-                    LogSystem.instance.Log("Could not parse value for config variable " + key + "-" + value + ".");
+                    LogSystem.Log($"Could not parse value for config variable {section}-{key}.");
                 }
             }
             else {
-                LogSystem.instance.Log("Value for config variable " + key + "-" + value + " is not recognized. Expected bool/string.");
+                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected bool/string.");
             }
             
             success = false;

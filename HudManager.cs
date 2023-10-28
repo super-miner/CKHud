@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
-using CKHud.HudComponents;
-using Assets.CKHud.HudComponents;
+using CKHud.Common;
+using CKHud.Common.Config;
+using CKHud.Config;
 
 namespace CKHud {
 	public class HudManager : MonoBehaviour {
@@ -14,7 +15,7 @@ namespace CKHud {
 
 		public List<HudRow> hudRows = new List<HudRow>();
 
-		private bool foundText = false;
+		private bool foundContainers = false;
 
 		void Awake() {
 			if (instance == null) {
@@ -30,56 +31,64 @@ namespace CKHud {
 			textPrefab = CKHudMod.assetBundle.LoadAsset<GameObject>(TEXT_PREFAB_PATH);
 
 			if (textPrefab == null) {
-				CKHudMod.Log("Error loading the text prefab (null)");
+				LogSystem.Log("Error loading the text prefab (null).");
+				return;
 			}
 
-			LoadConfig();
-
-			CKHudMod.Log("Successfully initialized the Hud Manager object.");
+			LogSystem.Log("Successfully initialized the Hud Manager object.");
 		}
 
 		void Update() {
 			if ((CKHudMod.rewiredPlayer?.GetButtonDown(CKHudMod.KEYBIND_TOGGLE_HUD) ?? false) && !Manager.menu.IsAnyMenuActive()) {
-				SetHudEnabled(!hudEnabled);
+				ConfigManager.instance.hudEnabled.SetValue(!ConfigManager.instance.hudEnabled.GetValue());
 			}
 
-			if (!foundText) {
+			if (!foundContainers) {
 				Transform ingameUI = FindInGameUI();
+				
+				if (ingameUI == null) {
+					LogSystem.Log("Could not find IngameUI.");
+					return;
+				}
+				
 				Transform mapUITransform = FindMapUI(ingameUI);
 
 				mapUI = mapUITransform.GetComponent<MapUI>();
 
-				GameObject ckHudHolder = new GameObject("CKHudUI");
-				ckHudHolder.transform.parent = ingameUI;
+				GameObject UIContainer = new GameObject("CKHud_UIContainer");
+				UIContainer.transform.parent = ingameUI;
 
-				InitHudRowsText(ckHudHolder.transform);
+				InitHudRowsText(UIContainer.transform);
 
-				CKHudMod.Log("Created text objects.");
-
-				foundText = true;
+				foundContainers = true;
+				LogSystem.Log("Created hud text game objects.");
 			}
 		}
 
 		Transform FindInGameUI() {
 			if (!Manager.ui) {
-				CKHudMod.Log("Could not find UI Manager.");
+				LogSystem.Log("Could not find UI Manager.");
 				return null;
 			}
 
 			Transform renderingParent = Manager.ui.transform.parent.parent.GetChild(2); // GlobalObjects (Main Manager)(Clone)/Rendering
 
-			Transform uiCamera = renderingParent.transform.GetChild(1);
+			Transform UICamera = Util.GetChildByName(renderingParent, "UI Camera");
 
-			return uiCamera.GetChild(0);
+			if (UICamera == null) {
+				LogSystem.Log("Could not find UI Camera.");
+				return null;
+			}
+
+			return Util.GetChildByName(UICamera, "IngameUI");
 		}
 
 		Transform FindMapUI(Transform ingameUI) {
-			return ingameUI.GetChild(13);
-		}
-
-		void SetHudEnabled(bool value) {
-			hudEnabled = value;
-			ConfigSystem.SetBool("General", "HudEnabled", value);
+			if (ingameUI == null) {
+				return null;
+			}
+			
+			return Util.GetChildByName(ingameUI, "MapUI");
 		}
 
 		void CreateHudRows(int amount) {
@@ -89,17 +98,14 @@ namespace CKHud {
 		}
 
 		void InitHudRowsText(Transform container) {
-			float textYPosition = startHudPosition;
+			float textYPosition = ConfigManager.instance.startHudPosition.GetValue();
+			float lineStep = ConfigManager.instance.hudLineStep.GetValue();
 
 			foreach (HudRow hudRow in hudRows) {
 				GameObject textGO = UnityEngine.Object.Instantiate(textPrefab, container, true);
 				textGO.transform.position = new Vector3(14.5f, textYPosition, 0.0f);
 
-				PugText text = textGO.GetComponent<PugText>();
-
-				hudRow.text = text;
-
-				textYPosition += hudLineStep;
+				textYPosition += lineStep;
 			}
 		}
 	}

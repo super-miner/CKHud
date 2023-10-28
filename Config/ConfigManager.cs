@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using CKHud.Common;
 using CKHud.Common.Config;
 using CKHud.HudComponents;
@@ -9,7 +11,7 @@ namespace CKHud.Config {
 	    
 	    public readonly int CONFIG_VERSION = 3;
 	    
-	    private readonly string DEFAULT_COMPONENTS = "FPS;Position;CenterDistance;DPS,MaxDPS;LocalComputerTime";
+	    private readonly string DEFAULT_COMPONENTS_LAYOUT = "FPS;Position;CenterDistance;DPS,MaxDPS;LocalComputerTime";
 	    private readonly bool DEFAULT_HUD_ENABLED = true;
 	    private readonly float DEFAULT_START_HUD_POSITION = 4.25f;
 	    private readonly float DEFAULT_HUD_LINE_STEP = -0.75f;
@@ -19,6 +21,7 @@ namespace CKHud.Config {
 
 	    public ConfigInt configVersion = null;
 
+	    public ConfigComponentsLayout componentsLayout = null;
 	    public ConfigBool hudEnabled = null;
 	    public ConfigFloat startHudPosition = null;
 	    public ConfigFloat hudLineStep = null;
@@ -27,78 +30,62 @@ namespace CKHud.Config {
 	    public ConfigBool compactMode = null;
 
 	    public ConfigManager() {
-		    configVersion = ConfigSystem.instance.AddInt("ConfigVersion", "DoNotEdit", CONFIG_VERSION);
+		    configVersion = ConfigSystem.AddInt("ConfigVersion", "DoNotEdit", CONFIG_VERSION);
 
 		    if (configVersion.GetValue() < CONFIG_VERSION) {
 			    UpdateConfig();
 		    }
 		    
-		    hudEnabled = ConfigSystem.instance.AddBool("General", "HudEnabled", DEFAULT_HUD_ENABLED);
-		    startHudPosition = ConfigSystem.instance.AddFloat("General", "HudStart", DEFAULT_START_HUD_POSITION);
-		    hudLineStep = ConfigSystem.instance.AddFloat("General", "LineSpacing", DEFAULT_HUD_LINE_STEP);
-		    hudRowsAmount = ConfigSystem.instance.AddInt("General", "NumRows", DEFAULT_HUD_ROWS_AMOUNT);
-		    textColor = ConfigSystem.instance.AddColor("General", "HudEnabled", DEFAULT_TEXT_COLOR);
-		    compactMode = ConfigSystem.instance.AddBool("General", "CompactMode", DEFAULT_COMPACT_MODE);
+		    componentsLayout = (ConfigComponentsLayout) ConfigSystem.AddVariable(new ConfigComponentsLayout(CKHudMod.MOD_ID, "Components", "Layout", DEFAULT_COMPONENTS_LAYOUT));
+		    hudEnabled = ConfigSystem.AddBool("General", "HudEnabled", DEFAULT_HUD_ENABLED);
+		    startHudPosition = ConfigSystem.AddFloat("General", "HudStart", DEFAULT_START_HUD_POSITION);
+		    hudLineStep = ConfigSystem.AddFloat("General", "LineSpacing", DEFAULT_HUD_LINE_STEP);
+		    hudRowsAmount = ConfigSystem.AddInt("General", "NumRows", DEFAULT_HUD_ROWS_AMOUNT);
+		    textColor = ConfigSystem.AddColor("General", "HudEnabled", DEFAULT_TEXT_COLOR);
+		    compactMode = ConfigSystem.AddBool("General", "CompactMode", DEFAULT_COMPACT_MODE);
 		    
-		    LogSystem.instance.Log("Loaded config manager.");
+		    LogSystem.Log("Loaded config manager.");
 	    }
-	    
+
 	    public static void Create() {
-		    if (ConfigSystem.instance == null) {
-			    LogSystem.instance.Log("Config Manager created before the config system.");
-			    return;
-		    }
-		    
 		    instance = instance ?? new ConfigManager();
 	    }
 
-		void LoadLayoutConfig() {
-			string componentLayout = "";
-			ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);
-			string[] rowStrings = componentLayout.Replace(" ", "").Split(';');
-			int rowsUsed = (int)Mathf.Min(rowStrings.Length, hudRows.Count);
-			bool addedComponents = false;
+		private void UpdateConfig() {
+			LogSystem.Log("Updating configs, do not close the game!");
 			
-			for (int i = 0; i < rowsUsed; i++) {
-				string[] componentStrings = rowStrings[i].Split(',');
+			if (configVersion.GetValue() < 2) {
+				List<HudRow> hudRows = componentsLayout.GetValue();
 				
-				foreach (string componentString in componentStrings) {
-					HudComponent component = HudComponent.Parse(componentString);
+				HudRow hudRow = new HudRow();
+				hudRow.components.Add(new LocalComputerTimeHudComponent());
+				
+				hudRows.Add(hudRow);
+				
+				componentsLayout.SetValue(hudRows);
+				
+				configVersion.SetValue(2);
+			}
+			
+			if (configVersion.GetValue() < 3) {
+				List<HudRow> hudRows = componentsLayout.GetValue();
 
-					if (component != null) {
-						hudRows[i].components.Add(component);
-						addedComponents = true;
+				foreach (HudRow hudRow in hudRows) {
+					for (int i = 0; i < hudRow.components.Count; i++) {
+						HudComponent hudComponent = hudRow.components[i];
+						
+						if (hudComponent is DPSHudComponent) {
+							hudRow.components.Insert(i + 1, new MaxDPSHudComponent());
+						}
 					}
 				}
-			}
-
-			if (!addedComponents) {
-				CKHudMod.Log("No components were found to add.");
-			}
-			else {
-				CKHudMod.Log("Components added.");
-			}
-		}
-
-		void UpdateConfig() {
-			int configVersion = 999999;
-			ConfigSystem.GetInt("ConfigVersion", "DoNotEdit", ref configVersion, CONFIG_VERSION);
-			
-			if (configVersion < 2) {
-				ConfigSystem.SetInt("ConfigVersion", "DoNotEdit", CONFIG_VERSION);
 				
-				string componentLayout = "";
-				ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);
-				ConfigSystem.SetString("Components", "Layout", componentLayout + ";LocalComputerTime");
+				componentsLayout.SetValue(hudRows);
+
+				configVersion.SetValue(2);
 			}
 			
-			if (configVersion < 3) {
-				ConfigSystem.SetInt("ConfigVersion", "DoNotEdit", CONFIG_VERSION);
-				
-				string componentLayout = "";
-				ConfigSystem.GetString("Components", "Layout", ref componentLayout, DEFAULT_COMPONENTS);
-				ConfigSystem.SetString("Components", "Layout", componentLayout.Replace("DPS", "DPS,MaxDPS"));
-			}
+			LogSystem.Log("Finished updating configs.");
 		}
     }
 }

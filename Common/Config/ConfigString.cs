@@ -33,7 +33,7 @@ namespace CKHud.Common.Config {
                 return (string)valueObject;
             }
             else {
-                LogSystem.instance.Log("Value for config variable " + key + "-" + value + " is not recognized. Expected string.");
+                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected string.");
             }
             
             success = false;

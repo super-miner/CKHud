@@ -39,7 +39,7 @@ namespace CKHud.Common.Config {
 
                     for (int i = 0; i < 4; i++) {
                         if (!float.TryParse(splitValueStrings[i], out valueFloats[i])) {
-                            LogSystem.instance.Log("Could not parse value " + i + " for config variable " + key + "-" + value + ".");
+                            LogSystem.Log($"Could not parse value {i} for config variable {section}-{key}.");
                             
                             success = false;
                             return Color.black;
@@ -49,11 +49,11 @@ namespace CKHud.Common.Config {
                     return new Color(valueFloats[0], valueFloats[1], valueFloats[2], valueFloats[3]);
                 }
                 else {
-                    LogSystem.instance.Log("Improper number of arguments for config variable " + key + "-" + value + ". Expected 4.");
+                    LogSystem.Log($"Improper number of arguments for config variable {section}-{key}. Expected 4.");
                 }
             }
             else {
-                LogSystem.instance.Log("Value for config variable " + key + "-" + value + " is not recognized. Expected string.");
+                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected string.");
             }
             
             success = false;

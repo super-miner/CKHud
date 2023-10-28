@@ -33,16 +33,17 @@ namespace CKHud.Common.Config {
                 return (float)valueObject;
             }
             else if (valueObject is string valueString) {
-                if (float.TryParse(valueString, out float valueFloat)) {
+	            string formattedValueString = valueString.Replace(",", ".").Replace(" ", "");
+                if (float.TryParse(formattedValueString, out float valueFloat)) {
                     value = valueFloat;
                     return valueFloat;
                 }
                 else {
-                    LogSystem.instance.Log("Could not parse value for config variable " + key + "-" + value + ".");
+                    LogSystem.Log($"Could not parse value for config variable {section}-{key}.");
                 }
             }
             else {
-                LogSystem.instance.Log("Value for config variable " + key + "-" + value + " is not recognized. Expected float/string.");
+                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected float/string.");
             }
             
             success = false;

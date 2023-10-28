@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using CKHud.Common;
 using CKHud.Common.Config;
+using CKHud.HudComponents;
+using PugMod;
 
 namespace CKHud.Config {
     public class ConfigComponentsLayout : ConfigVariable {
@@ -40,16 +42,61 @@ namespace CKHud.Config {
                     List<HudRow> hudRows = new List<HudRow>();
 
                     foreach (string rowString in rowStrings) {
-                        
+	                    HudRow hudRow = new HudRow();
+	                    
+	                    string[] componentStrings = rowString.Split();
+	                    if (rowStrings.Length > 0) {
+		                    foreach (string componentString in componentStrings) {
+			                    HudComponent hudComponent = HudComponentsRegistry.GetHudComponentByName(componentString);
+
+			                    if (hudComponent != null) {
+				                    hudRow.components.Add(hudComponent);
+			                    }
+		                    }
+	                    }
+	                    
+	                    hudRows.Add(hudRow);
                     }
+                }
+                else {
+	                LogSystem.Log($"The {section}-{key} value is empty or in the incorrect format");
                 }
             }
             else {
-                LogSystem.instance.Log("Value for config variable " + key + "-" + value + " is not recognized. Expected string.");
+                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected string.");
             }
             
             success = false;
             return new List<HudRow>();
+        }
+        
+        /// <summary>
+        /// Sets the value associated the this config variable.
+        /// </summary>
+        /// <param name="value">The value to set the variable to.</param>
+        public void SetValue(List<HudRow> value) {
+	        this.value = value;
+
+	        string valueString = "";
+	        for (int i = 0; i < value.Count; i++) {
+		        HudRow hudRow = value[i];
+		        
+		        if (i > 0) {
+			        valueString += ";";
+		        }
+
+		        for (int j = 0; j < hudRow.components.Count; j++) {
+			        HudComponent hudComponent = hudRow.components[j];
+
+			        if (j > 0) {
+				        valueString += ",";
+			        }
+
+			        valueString += HudComponentsRegistry.GetHudComponentByType(hudComponent.GetType());
+		        }
+	        }
+	        
+	        API.Config.Set(modId, section, key, value);
         }
     }
 }

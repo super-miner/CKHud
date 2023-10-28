@@ -24,16 +24,15 @@ namespace CKHud.Common.Config {
             this.key = key;
             this.defaultValue = defaultValue;
             
-            LogSystem.instance.Log("Created the template for the config value " + section + "-" + key + " with a default value of " + defaultValue + ".");
-
-            bool foundValue = false;
-            value = GetValue(out foundValue);
+            LogSystem.Log($"Created the template for the config value {section}-{key} with a default value of {defaultValue}.");
+            
+            value = GetValue(out bool foundValue);
 
             if (foundValue) {
-                LogSystem.instance.Log("Found value " + value + " for " + section + "-" + key + ".");
+                LogSystem.Log($"Found value {value} for {section}-{key}.");
             }
             else {
-                LogSystem.instance.Log("Could not find value for " + section + "-" + key + ", initialized with " + this.defaultValue + ".");
+                LogSystem.Log($"Could not find value for {section}-{key}, initialized with {defaultValue}.");
             }
         }
 

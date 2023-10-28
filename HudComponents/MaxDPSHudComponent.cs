@@ -1,10 +1,15 @@
+using CKHud.Config;
 using CKHud.HarmonyPatches;
 
 namespace CKHud.HudComponents {
     public class MaxDPSHudComponent : HudComponent {
-        public override string GetString() {
+	    public override bool ShouldRegenerateString() {
+		    return TimeSinceLastUpdate() > 0.25f;
+	    }
+	    
+        public override string CreateString() {
             DPSPatches.GetDPS(1.0f, 1.5f, 2.0f); // Makes sure the maxDPS is updated
-            if (HudManager.instance.compactMode) {
+            if (ConfigManager.instance.compactMode.GetValue()) {
                 return "Max DPS: " + DPSPatches.maxDPS;
             }
             else {
