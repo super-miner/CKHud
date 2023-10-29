@@ -8,7 +8,7 @@ namespace CKHud.HudComponents {
 	    public static ConfigFloat refreshRate = null;
 	    
 	    public override void InitConfigs() {
-		    refreshRate = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(typeof(FPSHudComponent)), "RefreshRate", 1.0f);
+		    refreshRate = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "RefreshRate", 1.0f);
 	    }
 	    
 	    public override bool ShouldRegenerateString() {
@@ -16,7 +16,10 @@ namespace CKHud.HudComponents {
 	    }
 	    
         public override string CreateString() {
-            return "FPS: " + (1 / Time.deltaTime).ToString("N0");
+	        float FPS = 1 / Time.deltaTime;
+	        string FPSString = FPS.ToString("N0");
+	        
+            return $"FPS: {FPSString}";
         }
     }
 }

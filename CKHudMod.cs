@@ -1,5 +1,4 @@
 using System.Linq;
-using CKHud.Common;
 using CKHud.Common.Config;
 using CKHud.Config;
 using CKHud.HudComponents;
@@ -65,7 +64,7 @@ namespace CKHud {
 			
 		}
 		
-		private LoadedMod GetModInfo() { // Code taken from Better Chat
+		private LoadedMod GetModInfo() {
 			return API.ModLoader.LoadedMods.FirstOrDefault(modInfo => modInfo.Handlers.Contains(this));
 		}
 	}	

@@ -9,7 +9,7 @@ namespace CKHud.HudComponents {
 	    public static ConfigFloat refreshRate = null;
 	    
 	    public override void InitConfigs() {
-		    refreshRate = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(typeof(FPSHudComponent)), "RefreshRate", 1.0f);
+		    refreshRate = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "RefreshRate", 1.0f);
 	    }
 	    
 	    public override bool ShouldRegenerateString() {
@@ -17,12 +17,11 @@ namespace CKHud.HudComponents {
 	    }
 	    
         public override string CreateString() {
-            //DPSPatches.GetDPS(1.0f, 1.5f, 2.0f); // Makes sure the maxDPS is updated TODO: Look at this
             if (ConfigManager.instance.compactMode.GetValue()) {
-                return "Max DPS: " + DPSPatches.maxDPS;
+                return $"Max DPS: {DPSPatches.maxDPS}";
             }
             else {
-                return "Max: " + DPSPatches.maxDPS;
+                return $"Max: {DPSPatches.maxDPS}";
             }
         }
     }

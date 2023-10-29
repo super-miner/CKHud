@@ -7,7 +7,7 @@ namespace CKHud.HudComponents {
 	    }
 	    
         public override string CreateString() {
-            return "FPS Cap: " + Application.targetFrameRate;
+            return $"FPS Cap: {Application.targetFrameRate}";
         }
     }
 }

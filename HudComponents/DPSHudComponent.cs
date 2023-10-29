@@ -12,13 +12,15 @@ namespace CKHud.HudComponents {
 	    public static ConfigFloat holdTime = null;
 	    
 	    public override void InitConfigs() {
-		    timeFrame = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(typeof(DPSHudComponent)), "TimeFrame", DEFAULT_TIME_FRAME);
-		    smoothingCoefficient = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(typeof(DPSHudComponent)), "SmoothingCoefficient", DEFAULT_SMOOTHING_COEFFICIENT);
-		    holdTime = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(typeof(DPSHudComponent)), "HoldTime", DEFAULT_HOLD_TIME);
+		    timeFrame = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "TimeFrame", DEFAULT_TIME_FRAME);
+		    smoothingCoefficient = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "SmoothingCoefficient", DEFAULT_SMOOTHING_COEFFICIENT);
+		    holdTime = ConfigSystem.AddFloat(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "HoldTime", DEFAULT_HOLD_TIME);
 	    }
 	    
         public override string CreateString() {
-            return "DPS: " + DPSPatches.GetDPS(timeFrame.GetValue(), smoothingCoefficient.GetValue(), holdTime.GetValue());
+	        int DPS = DPSPatches.GetDPS(timeFrame.GetValue(), smoothingCoefficient.GetValue(), holdTime.GetValue());
+	        
+            return $"DPS: {DPS}";
         }
     }
 }
