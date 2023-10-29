@@ -41,10 +41,10 @@ namespace CKHud.Config {
 		    startHudPosition = ConfigSystem.AddFloat("General", "HudStart", DEFAULT_START_HUD_POSITION);
 		    hudLineStep = ConfigSystem.AddFloat("General", "LineSpacing", DEFAULT_HUD_LINE_STEP);
 		    hudRowsAmount = ConfigSystem.AddInt("General", "NumRows", DEFAULT_HUD_ROWS_AMOUNT);
-		    textColor = ConfigSystem.AddColor("General", "HudEnabled", DEFAULT_TEXT_COLOR);
+		    textColor = ConfigSystem.AddColor("General", "TextColor", DEFAULT_TEXT_COLOR);
 		    compactMode = ConfigSystem.AddBool("General", "CompactMode", DEFAULT_COMPACT_MODE);
 		    
-		    LogSystem.Log("Loaded config manager.");
+		    CKHudMod.logger.LogInfo("Loaded config manager.");
 	    }
 
 	    public static void Create() {
@@ -52,9 +52,11 @@ namespace CKHud.Config {
 	    }
 
 		private void UpdateConfig() {
-			LogSystem.Log("Updating configs, do not close the game!");
+			CKHudMod.logger.LogWarning("Updating configs, do not close the game!");
 			
 			if (configVersion.GetValue() < 2) {
+				CKHudMod.logger.LogInfo($"Upgrading from config version {configVersion.GetValue()} to config version 2.");
+				
 				List<HudRow> hudRows = componentsLayout.GetValue();
 				
 				HudRow hudRow = new HudRow();
@@ -68,6 +70,8 @@ namespace CKHud.Config {
 			}
 			
 			if (configVersion.GetValue() < 3) {
+				CKHudMod.logger.LogInfo($"Upgrading from config version {configVersion.GetValue()} to config version 3.");
+				
 				List<HudRow> hudRows = componentsLayout.GetValue();
 
 				foreach (HudRow hudRow in hudRows) {
@@ -85,7 +89,7 @@ namespace CKHud.Config {
 				configVersion.SetValue(2);
 			}
 			
-			LogSystem.Log("Finished updating configs.");
+			CKHudMod.logger.LogInfo("Finished updating configs.");
 		}
     }
 }

@@ -27,23 +27,20 @@ namespace CKHud.Common.Config {
         /// <param name="forceFetch">Forces the function to re-read to config file instead of using cached values.</param>
         /// <returns>The value found or the default value if none found.</returns>
         public new int GetValue(out bool success, bool forceFetch = false) {
-            object valueObject = base.GetValue(out success, forceFetch);
-
-            if (valueObject is int) {
-                return (int)valueObject;
-            }
-            else if (valueObject is string valueString) {
+            string valueString = base.GetValue(out success, forceFetch);
+            
+            if (valueString != null) {
 	            string formattedValueString = valueString.Replace(",", ".").Replace(" ", "");
                 if (int.TryParse(formattedValueString, out int valueInt)) {
-                    value = valueInt;
+                    value = ValueToString(valueInt);
                     return valueInt;
                 }
                 else {
-                    LogSystem.Log($"Could not parse value for config variable {section}-{key}.");
+	                CKHudMod.logger.LogError($"Could not parse value for config variable {section}-{key}.");
                 }
             }
             else {
-                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected int/string.");
+	            CKHudMod.logger.LogError($"Value for config variable {section}-{key} is null.");
             }
             
             success = false;

@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace CKHud.Common.Config {
     public class ConfigFloat : ConfigVariable {
         /// <summary>
@@ -27,27 +29,38 @@ namespace CKHud.Common.Config {
         /// <param name="forceFetch">Forces the function to re-read to config file instead of using cached values.</param>
         /// <returns>The value found or the default value if none found.</returns>
         public new float GetValue(out bool success, bool forceFetch = false) {
-            object valueObject = base.GetValue(out success, forceFetch);
-
-            if (valueObject is float) {
-                return (float)valueObject;
-            }
-            else if (valueObject is string valueString) {
+            string valueString = base.GetValue(out success, forceFetch);
+            
+            if (valueString != null) {
 	            string formattedValueString = valueString.Replace(",", ".").Replace(" ", "");
                 if (float.TryParse(formattedValueString, out float valueFloat)) {
-                    value = valueFloat;
+                    value = ValueToString(valueFloat);
                     return valueFloat;
                 }
                 else {
-                    LogSystem.Log($"Could not parse value for config variable {section}-{key}.");
+	                CKHudMod.logger.LogError($"Could not parse value for config variable {section}-{key}.");
                 }
             }
             else {
-                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected float/string.");
+	            CKHudMod.logger.LogError($"Value for config variable {section}-{key} is null.");
             }
             
             success = false;
             return 0.0f;
+        }
+        
+        /// <summary>
+        /// Converts the value in the normal data type to a string.
+        /// </summary>
+        /// <param name="_value">The value to convert</param>
+        /// <returns>The converted string.</returns>
+        public override string ValueToString(object _value) {
+	        if (_value is float) {
+		       float colorFloat = (float)_value;
+		        return colorFloat.ToString(new CultureInfo("en-US"));
+	        }
+	        
+	        return _value.ToString();
         }
     }
 }

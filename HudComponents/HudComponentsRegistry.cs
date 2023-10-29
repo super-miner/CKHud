@@ -1,9 +1,9 @@
-﻿using CKHud;
-using CKHud.HudComponents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CKHud.Common;
+using CoreLib.Util.Extensions;
+using PugMod;
 
 namespace CKHud.HudComponents {
 	public static class HudComponentsRegistry {
@@ -22,6 +22,13 @@ namespace CKHud.HudComponents {
 			{"SpawnCell",			typeof(SpawnCellHudComponent)}
 		};
 
+		public static void InitConfigs() {
+			foreach (Type type in registry.Values) {
+				HudComponent hudComponent = Activator.CreateInstance(type) as HudComponent;
+				hudComponent?.InitConfigs();
+			}
+		}
+
 		public static HudComponent GetHudComponentByName(string name) {
 			if (registry.TryGetValue(name, out Type type)) {
 				return Activator.CreateInstance(type) as HudComponent;
@@ -36,17 +43,17 @@ namespace CKHud.HudComponents {
 
 		public static void RegisterHudComponent(string type, Type hudComponent) {
 			if (string.IsNullOrEmpty(type)) {
-				LogSystem.Log("Empty type parameter. Skipping Register");
+				CKHudMod.logger.LogError("Empty type parameter. Skipping Register");
 				return;
 			}
 
 			if (registry.ContainsKey(type)) {
-				LogSystem.Log($"{type} already registered. Skipping Register");
+				CKHudMod.logger.LogError($"{type} already registered. Skipping Register");
 				return;
 			}
 
 			if (!hudComponent.IsSubclassOf(typeof(HudComponent))) {
-				LogSystem.Log($"{type} not a subclass of HudComponent. Skipping Register");
+				CKHudMod.logger.LogError($"{type} not a subclass of HudComponent. Skipping Register");
 				return;
 			}
 

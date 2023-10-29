@@ -36,7 +36,7 @@ namespace CKHud.Common.Config {
         /// <param name="defaultValue">The default value for the variable.</param>
         public static ConfigFloat AddFloat(string section, string key, float defaultValue) {
 	        if (modId == null) {
-		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        CKHudMod.logger.LogError("Trying to create a config variable before the ConfigSystem was initialized.");
 		        return null;
 	        }
 	        
@@ -54,7 +54,7 @@ namespace CKHud.Common.Config {
         /// <param name="defaultValue">The default value for the variable.</param>
         public static ConfigInt AddInt(string section, string key, int defaultValue) {
 	        if (modId == null) {
-		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        CKHudMod.logger.LogError("Trying to create a config variable before the ConfigSystem was initialized.");
 		        return null;
 	        }
 	        
@@ -72,7 +72,7 @@ namespace CKHud.Common.Config {
         /// <param name="defaultValue">The default value for the variable.</param>
         public static ConfigBool AddBool(string section, string key, bool defaultValue) {
 	        if (modId == null) {
-		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        CKHudMod.logger.LogError("Trying to create a config variable before the ConfigSystem was initialized.");
 		        return null;
 	        }
 	        
@@ -90,7 +90,7 @@ namespace CKHud.Common.Config {
         /// <param name="defaultValue">The default value for the variable.</param>
         public static ConfigString AddString(string section, string key, string defaultValue) {
 	        if (modId == null) {
-		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        CKHudMod.logger.LogError("Trying to create a config variable before the ConfigSystem was initialized.");
 		        return null;
 	        }
 	        
@@ -108,7 +108,7 @@ namespace CKHud.Common.Config {
         /// <param name="defaultValue">The default value for the variable.</param>
         public static ConfigColor AddColor(string section, string key, Color defaultValue) {
 	        if (modId == null) {
-		        LogSystem.Log("Trying to create a config variable before the ConfigSystem was initialized.");
+		        CKHudMod.logger.LogError("Trying to create a config variable before the ConfigSystem was initialized.");
 		        return null;
 	        }
 	        

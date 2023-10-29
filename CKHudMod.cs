@@ -1,17 +1,22 @@
 using System.Linq;
-using System.Runtime.CompilerServices;
 using CKHud.Common;
+using CKHud.Common.Config;
+using CKHud.Config;
+using CKHud.HudComponents;
 using CoreLib;
 using CoreLib.RewiredExtension;
 using PugMod;
 using Rewired;
 using UnityEngine;
+using Logger = CoreLib.Util.Logger;
 
 namespace CKHud {
 	public class CKHudMod : IMod {
 		public static string MOD_VERSION = "1.1.4";
 		public static string MOD_NAME = "CK Hud";
 		public static string MOD_ID = "CKHUD";
+
+		public static Logger logger = new Logger(MOD_NAME);
 
 		public static string KEYBIND_TOGGLE_HUD = MOD_ID + "_TOGGLE_HUD";
 		
@@ -20,14 +25,14 @@ namespace CKHud {
 		public static Player rewiredPlayer;
 
         public void EarlyInit() {
-			modInfo = GetModInfo();
+	        modInfo = GetModInfo();
 
 			if (modInfo != null) {
 				assetBundle = modInfo.AssetBundles[0];
-				LogSystem.Log("Found mod info.");
+				CKHudMod.logger.LogInfo("Found mod info.");
 			}
 			else {
-				LogSystem.Log("Could not find mod info.");
+				CKHudMod.logger.LogError("Could not find mod info.");
 			}
 			
 			CoreLibMod.LoadModules(typeof(RewiredExtensionModule));
@@ -39,13 +44,17 @@ namespace CKHud {
 		}
 
 		public void Init() {
+			ConfigSystem.Init(MOD_ID);
+			HudComponentsRegistry.InitConfigs();
+			ConfigManager.Create();
+			
 			new GameObject("CKHud_HudManager", typeof(HudManager));
 			
-			LogSystem.Log("Loaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
+			CKHudMod.logger.LogInfo("Loaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
 		}
 
 		public void Shutdown() {
-			LogSystem.Log("Unloaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
+			CKHudMod.logger.LogInfo("Unloaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
 		}
 
 		public void ModObjectLoaded(UnityEngine.Object obj) {

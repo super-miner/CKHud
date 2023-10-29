@@ -33,9 +33,9 @@ namespace CKHud.Config {
         /// <param name="forceFetch">Forces the function to re-read to config file instead of using cached values.</param>
         /// <returns>The value found or the default value if none found.</returns>
         public new List<HudRow> GetValue(out bool success, bool forceFetch = false) {
-            object valueObject = base.GetValue(out success, forceFetch);
+            string valueString = base.GetValue(out success, forceFetch);
 
-            if (valueObject is string valueString) {
+            if (valueString != null) {
                 string[] rowStrings = valueString.Split(";");
 
                 if (rowStrings.Length > 0) {
@@ -44,8 +44,8 @@ namespace CKHud.Config {
                     foreach (string rowString in rowStrings) {
 	                    HudRow hudRow = new HudRow();
 	                    
-	                    string[] componentStrings = rowString.Split();
-	                    if (rowStrings.Length > 0) {
+	                    string[] componentStrings = rowString.Split(",");
+	                    if (componentStrings.Length > 0) {
 		                    foreach (string componentString in componentStrings) {
 			                    HudComponent hudComponent = HudComponentsRegistry.GetHudComponentByName(componentString);
 
@@ -57,13 +57,15 @@ namespace CKHud.Config {
 	                    
 	                    hudRows.Add(hudRow);
                     }
+
+                    return hudRows;
                 }
                 else {
-	                LogSystem.Log($"The {section}-{key} value is empty or in the incorrect format");
+	                CKHudMod.logger.LogError($"The {section}-{key} value is empty or in the incorrect format");
                 }
             }
             else {
-                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected string.");
+	            CKHudMod.logger.LogError($"Value for config variable {section}-{key} is null.");
             }
             
             success = false;
@@ -75,28 +77,44 @@ namespace CKHud.Config {
         /// </summary>
         /// <param name="value">The value to set the variable to.</param>
         public void SetValue(List<HudRow> value) {
-	        this.value = value;
-
-	        string valueString = "";
-	        for (int i = 0; i < value.Count; i++) {
-		        HudRow hudRow = value[i];
+	        this.value = ValueToString(value);
+	        
+	        API.Config.Set(modId, section, key, this.value);
+        }
+        
+        /// <summary>
+        /// Converts the value in the normal data type to a string.
+        /// </summary>
+        /// <param name="_value">The value to convert</param>
+        /// <returns>The converted string.</returns>
+        public override string ValueToString(object _value) {
+	        if (_value is List<HudRow>) {
+		        List<HudRow> valueHudRows = (List<HudRow>)_value;
 		        
-		        if (i > 0) {
-			        valueString += ";";
-		        }
-
-		        for (int j = 0; j < hudRow.components.Count; j++) {
-			        HudComponent hudComponent = hudRow.components[j];
-
-			        if (j > 0) {
-				        valueString += ",";
+		        string valueString = "";
+		        
+		        for (int i = 0; i < valueHudRows.Count; i++) {
+			        HudRow hudRow = valueHudRows[i];
+		        
+			        if (i > 0) {
+				        valueString += ";";
 			        }
 
-			        valueString += HudComponentsRegistry.GetHudComponentByType(hudComponent.GetType());
+			        for (int j = 0; j < hudRow.components.Count; j++) {
+				        HudComponent hudComponent = hudRow.components[j];
+
+				        if (j > 0) {
+					        valueString += ",";
+				        }
+
+				        valueString += HudComponentsRegistry.GetHudComponentByType(hudComponent.GetType());
+			        }
 		        }
+
+		        return valueString;
 	        }
 	        
-	        API.Config.Set(modId, section, key, value);
+	        return _value.ToString();
         }
     }
 }

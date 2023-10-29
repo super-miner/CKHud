@@ -4,6 +4,10 @@ namespace CKHud.HudComponents {
     public class HudComponent {
 	    public string cachedString = "";
 	    public float lastUpdateTime = float.MinValue;
+
+	    public virtual void InitConfigs() {
+		    
+	    }
 	    
         public bool GetString(out string output) {
 	        if (ShouldRegenerateString()) {

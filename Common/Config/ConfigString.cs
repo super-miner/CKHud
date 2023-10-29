@@ -27,13 +27,13 @@ namespace CKHud.Common.Config {
         /// <param name="forceFetch">Forces the function to re-read to config file instead of using cached values.</param>
         /// <returns>The value found or the default value if none found.</returns>
         public new string GetValue(out bool success, bool forceFetch = false) {
-            object valueObject = base.GetValue(out success, forceFetch);
+            string valueString = base.GetValue(out success, forceFetch);
 
-            if (valueObject is string) {
-                return (string)valueObject;
+            if (valueString != null) {
+                return valueString;
             }
             else {
-                LogSystem.Log($"Value for config variable {section}-{key} is not recognized. Expected string.");
+	            CKHudMod.logger.LogError($"Value for config variable {section}-{key} is null.");
             }
             
             success = false;

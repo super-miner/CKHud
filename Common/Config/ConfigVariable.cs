@@ -8,7 +8,7 @@ namespace CKHud.Common.Config {
         public readonly string modId = "";
         public readonly string section = "";
         public readonly string key = "";
-        public object value = null;
+        public string value = null;
         public object defaultValue = null;
 
         /// <summary>
@@ -24,16 +24,20 @@ namespace CKHud.Common.Config {
             this.key = key;
             this.defaultValue = defaultValue;
             
-            LogSystem.Log($"Created the template for the config value {section}-{key} with a default value of {defaultValue}.");
+            CKHudMod.logger.LogInfo($"Created the template for the config value {section}-{key} with a default value of {defaultValue}.");
             
-            value = GetValue(out bool foundValue);
+            InitConfig();
+        }
 
-            if (foundValue) {
-                LogSystem.Log($"Found value {value} for {section}-{key}.");
-            }
-            else {
-                LogSystem.Log($"Could not find value for {section}-{key}, initialized with {defaultValue}.");
-            }
+        public void InitConfig() {
+	        value = GetValue(out bool foundValue);
+
+	        if (foundValue) {
+		        CKHudMod.logger.LogInfo($"Found value {value} for {modId}: {section}-{key}.");
+	        }
+	        else {
+		        CKHudMod.logger.LogWarning($"Could not find value for {section}-{key}, initialized with {ValueToString(defaultValue)}.");
+	        }
         }
 
         /// <summary>
@@ -41,7 +45,7 @@ namespace CKHud.Common.Config {
         /// </summary>
         /// <param name="forceFetch">Forces the function to re-read to config file instead of using cached values.</param>
         /// <returns>The value found or the default value if none found.</returns>
-        public object GetValue(bool forceFetch = false) {
+        public string GetValue(bool forceFetch = false) {
             return GetValue(out bool success, forceFetch);
         }
 
@@ -51,16 +55,16 @@ namespace CKHud.Common.Config {
         /// <param name="success">Whether the config variable already existed or not (true if already existed).</param>
         /// <param name="forceFetch">Forces the function to re-read to config file instead of using cached values.</param>
         /// <returns>The value found or the default value if none found.</returns>
-        public object GetValue(out bool success, bool forceFetch = false) {
+        public string GetValue(out bool success, bool forceFetch = false) {
             if (forceFetch || value == null) {
-                if (API.Config.TryGet(modId, section, key, out object output)) {
+                if (API.Config.TryGet(modId, section, key, out string output)) {
                     success = true;
                     return output;
                 }
                 else {
-                    API.Config.Set(CKHudMod.MOD_ID, section, key, defaultValue);
+                    SetValue(defaultValue);
                     success = false;
-                    return defaultValue;
+                    return ValueToString(defaultValue);
                 }
             }
             else {
@@ -72,11 +76,20 @@ namespace CKHud.Common.Config {
         /// <summary>
         /// Sets the value associated the this config variable.
         /// </summary>
-        /// <param name="value">The value to set the variable to.</param>
-        public void SetValue(object value) {
-            this.value = value;
+        /// <param name="_value">The value to set the variable to.</param>
+        public void SetValue(object _value) {
+            value = ValueToString(_value);
             
             API.Config.Set(modId, section, key, value);
+        }
+
+        /// <summary>
+        /// Converts the value in the normal data type to a string.
+        /// </summary>
+        /// <param name="_value">The value to convert</param>
+        /// <returns>The converted string.</returns>
+        public virtual string ValueToString(object _value) {
+	        return _value.ToString();
         }
     }
 }
