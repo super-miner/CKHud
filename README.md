@@ -11,17 +11,6 @@ If you would like to make a pull request here are some things that you'll want t
     - The `ConfigSystem` class already contains sethods for loading certain data types but if one does is not currently supported feel free to add it
  
 # Roadmap/TODO
-- Code refactoring
-    - Create a few generic scripts for console logging, config, UI that can be shared between this mod and Map Extras (this might be able to be it's own library mod if the dependency system is working)
-    - Add logging wherever possible to help with finding errors
-    - Make some classes (like HudLine) derive from MonoBehaviour
-    - Find container objects using name instead of child id and fix the debug system for this process
-    - Rework HudComponent class to cache values when possible
-    - Change the way that the hud is disabled to be based on `GameObject.SetActive(false)` instead of `PugText.Render("")`
-    - Move config logic from HudManager to its own class
-    - Make component loading more lenient to `... ;; ...`s (blank lines)
-    - Update to work with CoreLib
-- Add spawning cell position hud component
 - Add second hud location
 - Split hud between togglable and non-toggable hud
 - Replace compact mode with customizable text for each component
