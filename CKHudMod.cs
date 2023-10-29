@@ -11,7 +11,7 @@ using Logger = CoreLib.Util.Logger;
 
 namespace CKHud {
 	public class CKHudMod : IMod {
-		public static string MOD_VERSION = "1.1.4";
+		public static string MOD_VERSION = "1.2.0";
 		public static string MOD_NAME = "CK Hud";
 		public static string MOD_ID = "CKHUD";
 

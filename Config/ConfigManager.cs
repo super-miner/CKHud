@@ -30,12 +30,6 @@ namespace CKHud.Config {
 	    public ConfigBool compactMode = null;
 
 	    public ConfigManager() {
-		    configVersion = ConfigSystem.AddInt("ConfigVersion", "DoNotEdit", CONFIG_VERSION);
-
-		    if (configVersion.GetValue() < CONFIG_VERSION) {
-			    UpdateConfig();
-		    }
-		    
 		    componentsLayout = (ConfigComponentsLayout) ConfigSystem.AddVariable(new ConfigComponentsLayout(CKHudMod.MOD_ID, "Components", "Layout", DEFAULT_COMPONENTS_LAYOUT));
 		    hudEnabled = ConfigSystem.AddBool("General", "HudEnabled", DEFAULT_HUD_ENABLED);
 		    startHudPosition = ConfigSystem.AddFloat("General", "HudStart", DEFAULT_START_HUD_POSITION);
@@ -43,6 +37,12 @@ namespace CKHud.Config {
 		    hudRowsAmount = ConfigSystem.AddInt("General", "NumRows", DEFAULT_HUD_ROWS_AMOUNT);
 		    textColor = ConfigSystem.AddColor("General", "TextColor", DEFAULT_TEXT_COLOR);
 		    compactMode = ConfigSystem.AddBool("General", "CompactMode", DEFAULT_COMPACT_MODE);
+		    
+		    configVersion = ConfigSystem.AddInt("ConfigVersion", "DoNotEdit", CONFIG_VERSION);
+
+		    if (configVersion.GetValue() < CONFIG_VERSION) {
+			    UpdateConfig();
+		    }
 		    
 		    CKHudMod.logger.LogInfo("Loaded config manager.");
 	    }

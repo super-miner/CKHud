@@ -13,6 +13,8 @@ namespace CKHud.HudComponents {
 	        if (ShouldRegenerateString()) {
 		        cachedString = CreateString();
 		        output = cachedString;
+		        
+		        lastUpdateTime = Time.time;
 		        return true;
 	        }
 
@@ -25,8 +27,6 @@ namespace CKHud.HudComponents {
         }
 
         public virtual string CreateString() {
-	        lastUpdateTime = Time.time;
-
 	        return "";
         }
 

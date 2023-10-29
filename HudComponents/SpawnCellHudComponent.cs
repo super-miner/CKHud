@@ -12,26 +12,32 @@ namespace CKHud.HudComponents {
 		public static ConfigInt decimalPlaces = null;
 	    
 		public override void InitConfigs() {
-			decimalPlaces = ConfigSystem.AddInt(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "RefreshRate", DEFAULT_DECIMAL_PLACES);
+			decimalPlaces = ConfigSystem.AddInt(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "DecimalPlaces", DEFAULT_DECIMAL_PLACES);
 		}
 
 		public override string CreateString() {
-			Vector3 playerPosition = Manager.main.player.WorldPosition;
+			PlayerController player = Manager.main.player;
+
+			if (player == null) {
+				return "";
+			}
+	        
+			Vector3 playerPosition = player.WorldPosition;
 			
 			Vector2 spawnCell = new Vector2(Mathf.Floor(playerPosition.x / SPAWN_CELL_SIZE), Mathf.Floor(playerPosition.z / SPAWN_CELL_SIZE));
 			Vector2 positionInCell = new Vector2(Mathf.Abs(playerPosition.x) % SPAWN_CELL_SIZE, Mathf.Abs(playerPosition.z) % SPAWN_CELL_SIZE);
 			
-			string xCellString = spawnCell.x.ToString("N" + decimalPlaces.GetValue());
-			string zCellString = spawnCell.y.ToString("N" + decimalPlaces.GetValue());
+			string xCellString = spawnCell.x.ToString("N0");
+			string zCellString = spawnCell.y.ToString("N0");
 			
 			string xPosString = positionInCell.x.ToString("N" + decimalPlaces.GetValue());
 			string zPosString = positionInCell.y.ToString("N" + decimalPlaces.GetValue());
 
 			if (ConfigManager.instance.compactMode.GetValue()) {
-				return $"Cell: {xCellString}/{zCellString} Cell Pos: {xPosString}/{zPosString}";
+				return $"Cell: {xCellString}/{zCellString} Pos: {xPosString}/{zPosString}";
 			}
 			else {
-				return $"Cell: {xCellString}/{zCellString} Cell Position: {xPosString}/{zPosString}";
+				return $"Cell: {xCellString}/{zCellString}   Position: {xPosString}/{zPosString}";
 			}
 		}
     }

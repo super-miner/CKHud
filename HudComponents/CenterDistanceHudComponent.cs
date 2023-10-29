@@ -9,11 +9,17 @@ namespace CKHud.HudComponents {
 	    public static ConfigInt decimalPlaces = null;
 	    
 	    public override void InitConfigs() {
-		    decimalPlaces = ConfigSystem.AddInt(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "RefreshRate", DEFAULT_DECIMAL_PLACES);
+		    decimalPlaces = ConfigSystem.AddInt(HudComponentsRegistry.GetHudComponentByType(this.GetType()), "DecimalPlaces", DEFAULT_DECIMAL_PLACES);
 	    }
 	    
         public override string CreateString() {
-            Vector3 playerPosition = Manager.main.player.WorldPosition;
+	        PlayerController player = Manager.main.player;
+
+	        if (player == null) {
+		        return "";
+	        }
+	        
+            Vector3 playerPosition = player.WorldPosition;
             float distance = Vector3.Distance(Vector3.zero, playerPosition);
             string distanceString = distance.ToString("N" + decimalPlaces.GetValue());
             
