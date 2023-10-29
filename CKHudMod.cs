@@ -1,10 +1,13 @@
 using System.Linq;
-using System.Runtime.CompilerServices;
+using CKHud.Common.Config;
+using CKHud.Config;
+using CKHud.HudComponents;
 using CoreLib;
 using CoreLib.RewiredExtension;
 using PugMod;
 using Rewired;
 using UnityEngine;
+using Logger = CoreLib.Util.Logger;
 
 namespace CKHud {
 	public class CKHudMod : IMod {
@@ -12,50 +15,45 @@ namespace CKHud {
 		public static string MOD_NAME = "CK Hud";
 		public static string MOD_ID = "CKHUD";
 
+		public static Logger logger = new Logger(MOD_NAME);
+
 		public static string KEYBIND_TOGGLE_HUD = MOD_ID + "_TOGGLE_HUD";
 		
 		public static LoadedMod modInfo = null;
 		public static AssetBundle assetBundle;
 		public static Player rewiredPlayer;
-		
-		private GameObject hudManager = null;
-		
-		public static void Log(object message) {
-			Debug.Log(MOD_NAME + ": " + message.ToString());
-		}
-
-        public static void LogMethod(object message, [CallerMemberName] string callerMethod = "") {
-            Debug.Log($"{MOD_NAME} [${callerMethod}]: {message}");
-        }
 
         public void EarlyInit() {
-			modInfo = GetModInfo();
+	        modInfo = GetModInfo();
 
 			if (modInfo != null) {
 				assetBundle = modInfo.AssetBundles[0];
-				CKHudMod.Log("Found mod info.");
+				CKHudMod.logger.LogInfo("Found mod info.");
 			}
 			else {
-				CKHudMod.Log("Could not find mod info.");
+				CKHudMod.logger.LogError("Could not find mod info.");
 			}
-
-
+			
 			CoreLibMod.LoadModules(typeof(RewiredExtensionModule));
 
-			RewiredExtensionModule.rewiredStart += () => { 
+			RewiredExtensionModule.rewiredStart += () => {
 				rewiredPlayer = ReInput.players.GetPlayer(0);
 			};
 			RewiredExtensionModule.AddKeybind(KEYBIND_TOGGLE_HUD, $"{MOD_NAME}: Toggle HUD", KeyboardKeyCode.F1);
 		}
 
 		public void Init() {
-			hudManager = new GameObject("CKHud_HudManager", typeof(HudManager));
+			ConfigSystem.Init(MOD_ID);
+			HudComponentsRegistry.InitConfigs();
+			ConfigManager.Create();
 			
-			CKHudMod.Log("Loaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
+			new GameObject("CKHud_HudManager", typeof(HudManager));
+			
+			CKHudMod.logger.LogInfo("Loaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
 		}
 
 		public void Shutdown() {
-			CKHudMod.Log("Unloaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
+			CKHudMod.logger.LogInfo("Unloaded " + CKHudMod.MOD_NAME + " version " + CKHudMod.MOD_VERSION + ".");
 		}
 
 		public void ModObjectLoaded(UnityEngine.Object obj) {
@@ -66,7 +64,7 @@ namespace CKHud {
 			
 		}
 		
-		private LoadedMod GetModInfo() { // Code taken from Better Chat
+		private LoadedMod GetModInfo() {
 			return API.ModLoader.LoadedMods.FirstOrDefault(modInfo => modInfo.Handlers.Contains(this));
 		}
 	}	
