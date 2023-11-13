@@ -86,7 +86,7 @@ namespace CKHud.Config {
 				
 				componentsLayout.SetValue(hudRows);
 
-				configVersion.SetValue(2);
+				configVersion.SetValue(3);
 			}
 			
 			CKHudMod.logger.LogInfo("Finished updating configs.");
