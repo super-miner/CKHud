@@ -24,7 +24,7 @@ namespace CKHud.Common.Config {
             this.key = key;
             this.defaultValue = defaultValue;
             
-            CKHudMod.logger.LogInfo($"Created the template for the config value {section}-{key} with a default value of {defaultValue}.");
+            CKHudMod.logger.LogInfo($"Created the template for the config value {section}-{key} with a default value of {ValueToString(defaultValue)}.");
             
             InitConfig();
         }

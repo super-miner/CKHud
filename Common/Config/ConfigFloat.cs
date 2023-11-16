@@ -33,7 +33,7 @@ namespace CKHud.Common.Config {
             
             if (valueString != null) {
 	            string formattedValueString = valueString.Replace(",", ".").Replace(" ", "");
-                if (float.TryParse(formattedValueString, out float valueFloat)) {
+                if (float.TryParse(formattedValueString, NumberStyles.Float, new CultureInfo("en-US"), out float valueFloat)) {
                     value = ValueToString(valueFloat);
                     return valueFloat;
                 }
